@@ -1,0 +1,21 @@
+# Maven / compilación
+target/
+*.class
+*.jar
+
+# Datos que genera el programa al ejecutarse (cuentas de prueba, torneos, pronósticos)
+usuarios.txt
+torneos.txt
+eventos.txt
+pronosticos.txt
+
+# IDE
+.idea/
+*.iml
+nbproject/private/
+nbactions.xml
+.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
