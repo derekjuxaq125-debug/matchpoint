@@ -3,12 +3,16 @@ package com.matchpoint.cuentas;
 import com.matchpoint.cuentas.modelo.Torneo;
 import com.matchpoint.cuentas.repositorio.EventoRepositorio;
 import com.matchpoint.cuentas.repositorio.EventoRepositorioArchivo;
+import com.matchpoint.cuentas.repositorio.MovimientoRepositorioArchivo;
 import com.matchpoint.cuentas.repositorio.PronosticoRepositorioArchivo;
 import com.matchpoint.cuentas.repositorio.TorneoRepositorio;
 import com.matchpoint.cuentas.repositorio.TorneoRepositorioArchivo;
+import com.matchpoint.cuentas.repositorio.UsuarioRepositorio;
 import com.matchpoint.cuentas.repositorio.UsuarioRepositorioArchivo;
 import com.matchpoint.cuentas.servicio.AutenticacionServicio;
+import com.matchpoint.cuentas.servicio.CreditoServicio;
 import com.matchpoint.cuentas.servicio.EventoServicio;
+import com.matchpoint.cuentas.servicio.LibroMovimientos;
 import com.matchpoint.cuentas.servicio.PronosticoServicio;
 import com.matchpoint.cuentas.servicio.UsuarioServicio;
 import java.nio.file.Path;
@@ -28,6 +32,9 @@ public final class Aplicacion {
     public final PronosticoServicio pronosticos;
     public final TorneoRepositorio torneos;
     public final EventoRepositorio repositorioEventos;
+    public final UsuarioRepositorio repositorioUsuarios;
+    public final LibroMovimientos libro;
+    public final CreditoServicio creditos;
 
     private Aplicacion(Path carpeta) {
         UsuarioRepositorioArchivo repoUsuarios = new UsuarioRepositorioArchivo(carpeta.resolve("usuarios.txt"));
@@ -35,6 +42,10 @@ public final class Aplicacion {
         this.repositorioEventos = new EventoRepositorioArchivo(carpeta.resolve("eventos.txt"));
         PronosticoRepositorioArchivo repoPronosticos =
                 new PronosticoRepositorioArchivo(carpeta.resolve("pronosticos.txt"));
+
+        this.repositorioUsuarios = repoUsuarios;
+        this.libro = new LibroMovimientos(new MovimientoRepositorioArchivo(carpeta.resolve("movimientos.txt")));
+        this.creditos = new CreditoServicio(repoUsuarios, libro);
 
         this.usuarios = new UsuarioServicio(repoUsuarios);
         this.autenticacion = new AutenticacionServicio(repoUsuarios);
