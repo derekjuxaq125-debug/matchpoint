@@ -150,9 +150,7 @@ public class PronosticoServicio {
         }
         Pronostico actual = pronosticos.buscarPorId(pronosticoId == null ? "" : pronosticoId)
                 .orElseThrow(() -> new ValidacionException(Map.of(CAMPO_EVENTO, "El pronóstico no existe.")));
-        if (!actual.usuarioId().equalsIgnoreCase(actor.identificacion())) {
-            throw new AccesoDenegadoException("Solo puede cambiar sus propios pronósticos.");
-        }
+        AccesoDatos.exigirGestion(actor, actual.usuarioId()); // HU-26
         Evento evento = eventos.buscarPorId(actual.eventoId()).orElseThrow(() ->
                 new ValidacionException(Map.of(CAMPO_EVENTO, "El evento seleccionado no existe.")));
         if (!evento.estaHabilitado(LocalDateTime.now(reloj))) {
@@ -177,5 +175,11 @@ public class PronosticoServicio {
             throw new AccesoDenegadoException("Debe iniciar sesión.");
         }
         return pronosticos.listarPorUsuario(actor.identificacion());
+    }
+
+    /** HU-26: pronósticos de un usuario; solo el propio participante o un auditor. */
+    public List<Pronostico> pronosticosDe(Usuario actor, String usuarioId) {
+        AccesoDatos.exigirLectura(actor, usuarioId);
+        return pronosticos.listarPorUsuario(usuarioId.trim());
     }
 }
