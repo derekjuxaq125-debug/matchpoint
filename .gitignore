@@ -19,3 +19,11 @@ nbactions.xml
 # Sistema operativo
 .DS_Store
 Thumbs.db
+movimientos.txt
+cuentas.txt
+
+# Frontend web (Vite)
+web/node_modules/
+web/dist/
+web/.env.local
+.vercel/
