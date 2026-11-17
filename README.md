@@ -25,7 +25,7 @@ El proyecto tiene dos versiones con **las mismas reglas de negocio**:
 |---|---|---|
 | Santiago Rondón | HU-01/HU-02 web, HU-04/HU-10 web, HU-12, HU-26, TT-04 | https://youtu.be/CQI4LN3VskQ |
 | Derek Julián Acuña López | TT-01, HU-09, HU-07, HU-11, HU-14/HU-15 | Enlace pendiente de publicación |
-| Johan Camilo Moreno Gómez | HU-03, HU-05/HU-06, HU-08, TT-05, despliegue | Enlace pendiente de publicación |
+| Johan Camilo Moreno Gómez | HU-03, HU-05/HU-06, HU-08, TT-05, despliegue | [MatchPoint Sprint 1-2](https://youtu.be/usgulEp3T8g) |
 
 ## Estado por sprint
 
