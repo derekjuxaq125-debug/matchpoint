@@ -26,4 +26,9 @@ public class PronosticoRepositorioMemoria implements PronosticoRepositorio {
     public synchronized void guardar(Pronostico pronostico) {
         pronosticos.add(pronostico);
     }
+
+    @Override
+    public synchronized void actualizar(Pronostico pronostico) {
+        pronosticos.replaceAll(p -> p.id().equals(pronostico.id()) ? pronostico : p);
+    }
 }

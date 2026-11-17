@@ -42,7 +42,19 @@ public class PronosticoRepositorioArchivo implements PronosticoRepositorio {
 
     @Override
     public synchronized void guardar(Pronostico p) {
-        ArchivoLineas.agregar(archivo, "el pronóstico", cod(p.id()), cod(p.usuarioId()), cod(p.eventoId()),
-                cod(p.opcion()), p.registrado().toString());
+        ArchivoLineas.agregar(archivo, "el pronóstico", campos(p));
+    }
+
+    @Override
+    public synchronized void actualizar(Pronostico cambiado) {
+        List<String[]> filas = listar().stream()
+                .map(p -> campos(p.id().equals(cambiado.id()) ? cambiado : p))
+                .toList();
+        ArchivoLineas.reescribir(archivo, "el pronóstico", filas);
+    }
+
+    private static String[] campos(Pronostico p) {
+        return new String[]{cod(p.id()), cod(p.usuarioId()), cod(p.eventoId()), cod(p.opcion()),
+                p.registrado().toString()};
     }
 }

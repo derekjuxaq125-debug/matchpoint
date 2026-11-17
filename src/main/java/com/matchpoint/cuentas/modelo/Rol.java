@@ -11,6 +11,7 @@ public enum Rol {
             Opcion.LISTAR_TORNEOS_Y_EVENTOS,
             Opcion.VER_OPCIONES_PRONOSTICO,
             Opcion.REGISTRAR_PRONOSTICO,
+            Opcion.CAMBIAR_PRONOSTICO,
             Opcion.CONSULTAR_SALDO)),
     ORGANIZADOR("Organizador", List.of(
             Opcion.CREAR_TORNEO,
