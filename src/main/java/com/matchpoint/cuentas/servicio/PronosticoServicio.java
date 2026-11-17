@@ -10,6 +10,7 @@ import com.matchpoint.cuentas.repositorio.PronosticoRepositorio;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,14 +18,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Lógica de HU-10: registrar un pronóstico solo en un evento habilitado y con
- * una opción válida. El rechazo por evento cerrado (HU-12) sale de la misma
- * regla: {@link Evento#estaHabilitado}.
+ * una opción válida. HU-12: después del cierre se rechazan pronósticos nuevos y
+ * cambios; antes del cierre el participante puede cambiar su opción (sin un
+ * nuevo cobro). Ambas reglas salen de {@link Evento#estaHabilitado}.
  */
 public class PronosticoServicio {
 
     public static final String CAMPO_EVENTO = "evento";
     public static final String CAMPO_OPCION = "opcion";
     public static final String MENSAJE_EVENTO_CERRADO = "El evento ya está cerrado. No se aceptan pronósticos.";
+    public static final String MENSAJE_CAMBIO_CERRADO =
+            "El evento ya está cerrado. No se aceptan cambios en el pronóstico.";
 
     private final EventoRepositorio eventos;
     private final PronosticoRepositorio pronosticos;
@@ -131,5 +135,47 @@ public class PronosticoServicio {
             throw e;
         }
         return pronostico;
+    }
+
+    /**
+     * HU-12: cambia la opción de un pronóstico propio mientras el evento siga abierto.
+     * El cambio no vuelve a cobrar: la participación ya está pagada.
+     *
+     * @throws AccesoDenegadoException si no es participante o el pronóstico es de otro usuario
+     * @throws ValidacionException si el evento ya cerró o la opción no es válida
+     */
+    public synchronized Pronostico cambiar(Usuario actor, String pronosticoId, String nuevaOpcion) {
+        if (actor == null || actor.rol() != Rol.PARTICIPANTE) {
+            throw new AccesoDenegadoException("Solo un participante puede cambiar sus pronósticos.");
+        }
+        Pronostico actual = pronosticos.buscarPorId(pronosticoId == null ? "" : pronosticoId)
+                .orElseThrow(() -> new ValidacionException(Map.of(CAMPO_EVENTO, "El pronóstico no existe.")));
+        if (!actual.usuarioId().equalsIgnoreCase(actor.identificacion())) {
+            throw new AccesoDenegadoException("Solo puede cambiar sus propios pronósticos.");
+        }
+        Evento evento = eventos.buscarPorId(actual.eventoId()).orElseThrow(() ->
+                new ValidacionException(Map.of(CAMPO_EVENTO, "El evento seleccionado no existe.")));
+        if (!evento.estaHabilitado(LocalDateTime.now(reloj))) {
+            throw new ValidacionException(Map.of(CAMPO_EVENTO, MENSAJE_CAMBIO_CERRADO));
+        }
+        String limpia = nuevaOpcion == null ? "" : nuevaOpcion.trim();
+        if (limpia.isEmpty()) {
+            throw new ValidacionException(Map.of(CAMPO_OPCION, "Falta el campo obligatorio: Opción de pronóstico."));
+        }
+        String valida = evento.opciones().stream().filter(o -> o.equalsIgnoreCase(limpia)).findFirst()
+                .orElseThrow(() -> new ValidacionException(Map.of(CAMPO_OPCION,
+                        "La opción elegida no es válida para este evento.")));
+        Pronostico cambiado = new Pronostico(actual.id(), actual.usuarioId(), actual.eventoId(), valida,
+                actual.registrado());
+        pronosticos.actualizar(cambiado);
+        return cambiado;
+    }
+
+    /** Pronósticos del propio participante (HU-12 y, en el Sprint 3, HU-13). */
+    public List<Pronostico> misPronosticos(Usuario actor) {
+        if (actor == null) {
+            throw new AccesoDenegadoException("Debe iniciar sesión.");
+        }
+        return pronosticos.listarPorUsuario(actor.identificacion());
     }
 }
