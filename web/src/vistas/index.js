@@ -8,6 +8,7 @@ import eventosAdmin from './eventos-organizador.js';
 import pronosticar from './pronosticar.js';
 import misPronosticos from './mis-pronosticos.js';
 import creditos from './creditos.js';
+import saldo from './saldo.js';
 
 export const VISTAS = [
   inicio,
@@ -17,11 +18,11 @@ export const VISTAS = [
   pronosticar,
   misPronosticos,
   creditos,
+  saldo,
 ];
 
 export const PENDIENTES = {
   PARTICIPANTE: [
-    { titulo: 'Mi saldo', hu: 'HU-08' },
   ],
   ORGANIZADOR: [
   ],
