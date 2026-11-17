@@ -10,6 +10,7 @@ import com.matchpoint.cuentas.repositorio.TorneoRepositorioArchivo;
 import com.matchpoint.cuentas.repositorio.UsuarioRepositorio;
 import com.matchpoint.cuentas.repositorio.UsuarioRepositorioArchivo;
 import com.matchpoint.cuentas.servicio.AutenticacionServicio;
+import com.matchpoint.cuentas.servicio.CobroConCreditos;
 import com.matchpoint.cuentas.servicio.CreditoServicio;
 import com.matchpoint.cuentas.servicio.EventoServicio;
 import com.matchpoint.cuentas.servicio.LibroMovimientos;
@@ -18,6 +19,7 @@ import com.matchpoint.cuentas.servicio.UsuarioServicio;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.time.Clock;
 
 /**
  * Arma los servicios y repositorios del sistema en un solo lugar. Las pantallas
@@ -50,7 +52,8 @@ public final class Aplicacion {
         this.usuarios = new UsuarioServicio(repoUsuarios);
         this.autenticacion = new AutenticacionServicio(repoUsuarios);
         this.eventos = new EventoServicio(repositorioEventos, torneos);
-        this.pronosticos = new PronosticoServicio(repositorioEventos, repoPronosticos);
+        this.pronosticos = new PronosticoServicio(repositorioEventos, repoPronosticos,
+                new CobroConCreditos(libro), Clock.systemDefaultZone()); // HU-11
     }
 
     /** Crea la aplicación guardando sus datos en archivos de texto dentro de {@code carpeta}. */

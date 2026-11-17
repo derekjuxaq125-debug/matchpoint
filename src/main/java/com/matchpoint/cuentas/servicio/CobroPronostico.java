@@ -13,6 +13,9 @@ import com.matchpoint.cuentas.modelo.Usuario;
  * {@link #NINGUNO} por el cobro real y usa {@code referencia} (el id del
  * pronóstico) como origen del movimiento de HU-09 y como llave de idempotencia
  * de HU-14.
+ *
+ * <p>Patrón Strategy (TT-04): {@link #NINGUNO} y {@link CobroConCreditos} son
+ * estrategias intercambiables sin cambiar {@link PronosticoServicio}.
  */
 @FunctionalInterface
 public interface CobroPronostico {
@@ -25,4 +28,11 @@ public interface CobroPronostico {
      * @throws RuntimeException si no se puede cobrar; el pronóstico no se registra
      */
     void cobrar(Usuario usuario, Evento evento, String referencia);
+
+    /**
+     * Devuelve lo cobrado cuando el pronóstico no se pudo guardar después del cobro
+     * (operación fallida). No borra el débito: deja un movimiento de reversión.
+     */
+    default void revertir(Usuario usuario, Evento evento, String referencia) {
+    }
 }

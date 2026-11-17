@@ -91,8 +91,13 @@ public class PronosticoServicio {
 
         Pronostico pronostico = new Pronostico(UUID.randomUUID().toString(), actor.identificacion(),
                 evento.id(), opcionValida.get(), ahora);
-        cobro.cobrar(actor, evento, pronostico.id()); // HU-11 (Julian); si falla, no se guarda
-        pronosticos.guardar(pronostico);
+        cobro.cobrar(actor, evento, pronostico.id()); // HU-11: si falla (saldo insuficiente), no se guarda
+        try {
+            pronosticos.guardar(pronostico);
+        } catch (RuntimeException e) {
+            cobro.revertir(actor, evento, pronostico.id()); // operación fallida: se devuelven los créditos
+            throw e;
+        }
         return pronostico;
     }
 }
