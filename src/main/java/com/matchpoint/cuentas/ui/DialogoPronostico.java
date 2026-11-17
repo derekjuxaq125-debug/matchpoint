@@ -16,6 +16,7 @@ import java.awt.Window;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -43,6 +44,8 @@ public class DialogoPronostico extends JDialog {
     private final JLabel etiquetaDetalle = new JLabel(" ");
     private final JLabel etiquetaError = new JLabel(" ");
     private final Map<String, JComponent> camposPorClave = new LinkedHashMap<>();
+    /** HU-14: una clave por diálogo; si el usuario reintenta, se reutiliza y no se cobra dos veces. */
+    private final String claveSolicitud = UUID.randomUUID().toString();
 
     /** Evento con el texto que se muestra en la lista. */
     private record EventoItem(Evento evento, String texto) {
@@ -139,10 +142,13 @@ public class DialogoPronostico extends JDialog {
         limpiarErrores();
         EventoItem item = (EventoItem) comboEvento.getSelectedItem();
         try {
-            app.pronosticos.registrar(usuario,
+            boolean repetida = app.pronosticos.registrar(usuario,
                     item == null ? null : item.evento().id(),
-                    (String) comboOpcion.getSelectedItem());
-            JOptionPane.showMessageDialog(this, "Pronóstico registrado correctamente.",
+                    (String) comboOpcion.getSelectedItem(), claveSolicitud).repetida();
+            JOptionPane.showMessageDialog(this, repetida
+                            ? "La operación ya fue procesada; no se cobró de nuevo."
+                            : "Pronóstico registrado correctamente. Saldo: "
+                              + app.libro.saldoVigente(usuario.identificacion()) + " créditos.",
                     "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } catch (ValidacionException ex) {
