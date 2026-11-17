@@ -42,6 +42,7 @@ public class LibroMovimientos {
      * @param origen   operación que lo origina, p. ej. "PRONOSTICO:&lt;id&gt;"
      * @param clave    llave única del movimiento
      * @throws ValidacionException si faltan datos o la cantidad es cero
+     * @throws SaldoInsuficienteException si el movimiento dejaría el saldo negativo (HU-11)
      * @throws com.matchpoint.cuentas.repositorio.RepositorioException si falla el guardado (el saldo no cambia)
      */
     public synchronized Movimiento registrar(String usuarioId, TipoMovimiento tipo, int cantidad,
@@ -50,7 +51,11 @@ public class LibroMovimientos {
         if (repositorio.buscarPorClave(clave).isPresent()) {
             throw new ValidacionException(Map.of("clave", MENSAJE_CLAVE_REPETIDA));
         }
-        int nuevoSaldo = saldoVigente(usuarioId) + cantidad;
+        int saldoActual = saldoVigente(usuarioId);
+        int nuevoSaldo = saldoActual + cantidad;
+        if (nuevoSaldo < 0) {
+            throw new SaldoInsuficienteException(saldoActual, -cantidad); // HU-11: nunca saldo negativo
+        }
         Movimiento movimiento = new Movimiento(UUID.randomUUID().toString(), usuarioId, tipo, cantidad,
                 nuevoSaldo, origen, clave, LocalDateTime.now(reloj), justificacion);
         repositorio.guardar(movimiento);              // si falla, no se toca el saldo
