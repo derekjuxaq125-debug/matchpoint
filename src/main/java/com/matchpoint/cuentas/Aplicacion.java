@@ -1,6 +1,5 @@
 package com.matchpoint.cuentas;
 
-import com.matchpoint.cuentas.modelo.Torneo;
 import com.matchpoint.cuentas.repositorio.EventoRepositorio;
 import com.matchpoint.cuentas.repositorio.EventoRepositorioArchivo;
 import com.matchpoint.cuentas.repositorio.MovimientoRepositorioArchivo;
@@ -15,6 +14,7 @@ import com.matchpoint.cuentas.servicio.CreditoServicio;
 import com.matchpoint.cuentas.servicio.EventoServicio;
 import com.matchpoint.cuentas.servicio.LibroMovimientos;
 import com.matchpoint.cuentas.servicio.PronosticoServicio;
+import com.matchpoint.cuentas.servicio.TorneoServicio;
 import com.matchpoint.cuentas.servicio.UsuarioServicio;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -33,6 +33,7 @@ public final class Aplicacion {
     public final EventoServicio eventos;
     public final PronosticoServicio pronosticos;
     public final TorneoRepositorio torneos;
+    public final TorneoServicio torneoServicio;
     public final EventoRepositorio repositorioEventos;
     public final UsuarioRepositorio repositorioUsuarios;
     public final LibroMovimientos libro;
@@ -51,6 +52,7 @@ public final class Aplicacion {
 
         this.usuarios = new UsuarioServicio(repoUsuarios);
         this.autenticacion = new AutenticacionServicio(repoUsuarios);
+        this.torneoServicio = new TorneoServicio(torneos);
         this.eventos = new EventoServicio(repositorioEventos, torneos);
         this.pronosticos = new PronosticoServicio(repositorioEventos, repoPronosticos,
                 new CobroConCreditos(libro), Clock.systemDefaultZone()); // HU-11
@@ -60,19 +62,6 @@ public final class Aplicacion {
     public static Aplicacion conArchivos(Path carpeta) {
         Aplicacion app = new Aplicacion(carpeta);
         app.usuarios.sembrarCuentasIniciales();
-        app.sembrarTorneoDeDemostracion();
         return app;
-    }
-
-    /**
-     * Provisional: mientras HU-03 (crear torneo, Johan) no exista, deja un torneo
-     * para poder registrar eventos. Se elimina cuando HU-03 esté integrada.
-     */
-    private void sembrarTorneoDeDemostracion() {
-        if (torneos.listar().isEmpty()) {
-            LocalDate hoy = LocalDate.now();
-            torneos.guardar(new Torneo(UUID.randomUUID().toString(), "Torneo de demostración",
-                    "Fútbol", hoy, hoy.plusYears(1)));
-        }
     }
 }

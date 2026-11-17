@@ -3,8 +3,8 @@ package com.matchpoint.cuentas.modelo;
 import java.time.LocalDate;
 
 /**
- * Torneo. Modelo mínimo que HU-04 necesita para asociar eventos; la historia
- * HU-03 (Johan) lo completa con sus validaciones y pantalla de creación.
+ * Torneo deportivo (HU-03). Las validaciones están en
+ * {@link com.matchpoint.cuentas.servicio.TorneoServicio}.
  */
 public record Torneo(String id, String nombre, String deporte, LocalDate fechaInicio, LocalDate fechaFin) {
 
