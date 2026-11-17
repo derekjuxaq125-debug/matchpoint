@@ -9,9 +9,9 @@ Lo que ya quedó implementado con estas propuestas se marca **(en código)** y s
 | Duda | Propuesta | Dónde |
 |---|---|---|
 | Longitud máxima del nombre de usuario (HU-01) | 60 caracteres **(en código)** | `UsuarioServicio.NOMBRE_MAX` |
-| Longitud máxima del nombre de torneo (HU-03, Johan) | 60 caracteres, igual que usuarios y eventos | HU-03 |
+| Longitud máxima del nombre de torneo (HU-03, Johan) | 60 caracteres, igual que usuarios y eventos **(en código)** | `TorneoServicio.NOMBRE_MAX` |
 | Longitud máxima del nombre de evento (HU-04) | 60 caracteres **(en código)** | `EventoServicio.NOMBRE_MAX` |
-| Cantidad máxima de créditos iniciales (HU-07, Julian) | Entero entre 1 y 10 000 | HU-07 |
+| Cantidad máxima de créditos iniciales (HU-07, Julian) | Entero entre 1 y 10 000 **(en código)** | `CreditoServicio.MAXIMO_INICIAL` |
 | Contraseña (HU-01) | Mínimo 8 caracteres, guardada con SHA-256 + sal propia **(en código)**. Si el cliente exige un algoritmo de contraseñas (bcrypt/PBKDF2), se cambia solo `ClaveHash`. | `ClaveHash` |
 
 ## 2. Costo en créditos de cada pronóstico
