@@ -2,11 +2,15 @@
 
 Plataforma de gestión de torneos, pronósticos y créditos virtuales. Los créditos **no** tienen valor monetario, no se retiran ni se convierten en dinero.
 
-| Integrante | Rol |
-|---|---|
-| Santiago | Líder / Analista |
-| Julian | Arquitecto / Backend |
-| Johan (Camilo en la wiki) | Desarrollo / QA |
+**Aplicación web:** https://matchpoint-navy-alpha.vercel.app
+**Wiki del proyecto:** https://github.com/derekjuxaq125-debug/matchpoint/wiki
+**Tablero de Trello:** https://trello.com/b/gk8V1RAE/matchpoint-equipo-1-nexo-digital-labs
+
+| Integrante | Rol Scrum | Rol técnico |
+|---|---|---|
+| Santiago Rondón | Product Owner | Líder / Analista |
+| Johan Camilo Moreno Gómez | Scrum Master | Desarrollo / QA |
+| Derek Julián Acuña López | Developer | Arquitecto / Backend |
 
 El proyecto tiene dos versiones con **las mismas reglas de negocio**:
 
@@ -14,6 +18,14 @@ El proyecto tiene dos versiones con **las mismas reglas de negocio**:
 |---|---|---|
 | Escritorio | Java 17, Swing, Maven, JUnit 5 | NetBeans → *File > Open Project* → ejecutar `com.matchpoint.cuentas.Main` |
 | Web | Vite + JavaScript, Supabase (PostgreSQL), Vercel | Ver [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md) |
+
+## Videos de sustentación del Sprint 2
+
+| Integrante | Historias que explica | Video |
+|---|---|---|
+| Santiago Rondón | HU-01/HU-02 web, HU-04/HU-10 web, HU-12, HU-26, TT-04 | https://youtu.be/CQI4LN3VskQ |
+| Derek Julián Acuña López | TT-01, HU-09, HU-07, HU-11, HU-14/HU-15 | Enlace pendiente de publicación |
+| Johan Camilo Moreno Gómez | HU-03, HU-05/HU-06, HU-08, TT-05, despliegue | Enlace pendiente de publicación |
 
 ## Estado por sprint
 
