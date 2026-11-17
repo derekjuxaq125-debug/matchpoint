@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Libro de movimientos de créditos (HU-09). Es el único punto del sistema que
@@ -17,14 +19,21 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p>Mantiene además el saldo vigente de cada usuario; HU-08 lo compara con la
  * suma de los movimientos para verificar que coinciden.
+ *
+ * <p>HU-14 (idempotencia): la clave de cada movimiento es única; si llega otra
+ * solicitud con la misma clave (reintento, doble clic, error de conexión) se
+ * devuelve el movimiento original y no se descuenta otra vez.
+ *
+ * <p>HU-15 (concurrencia): las operaciones sobre el saldo de un mismo usuario se
+ * ejecutan de a una con un candado por usuario (verificar saldo + guardar +
+ * actualizar es una sola sección crítica); usuarios distintos no se esperan.
  */
 public class LibroMovimientos {
-
-    public static final String MENSAJE_CLAVE_REPETIDA = "Ya existe un movimiento con esa clave.";
 
     private final MovimientoRepositorio repositorio;
     private final Clock reloj;
     private final Map<String, Integer> saldosVigentes = new ConcurrentHashMap<>();
+    private final Map<String, ReentrantLock> candados = new ConcurrentHashMap<>();
 
     public LibroMovimientos(MovimientoRepositorio repositorio) {
         this(repositorio, Clock.systemDefaultZone());
@@ -40,27 +49,39 @@ public class LibroMovimientos {
      *
      * @param cantidad positiva (crédito) o negativa (débito), nunca cero
      * @param origen   operación que lo origina, p. ej. "PRONOSTICO:&lt;id&gt;"
-     * @param clave    llave única del movimiento
+     * @param clave    llave única del movimiento; repetirla devuelve el movimiento original (HU-14)
      * @throws ValidacionException si faltan datos o la cantidad es cero
      * @throws SaldoInsuficienteException si el movimiento dejaría el saldo negativo (HU-11)
      * @throws com.matchpoint.cuentas.repositorio.RepositorioException si falla el guardado (el saldo no cambia)
      */
-    public synchronized Movimiento registrar(String usuarioId, TipoMovimiento tipo, int cantidad,
-                                             String origen, String clave, String justificacion) {
+    public Movimiento registrar(String usuarioId, TipoMovimiento tipo, int cantidad,
+                                String origen, String clave, String justificacion) {
         validar(usuarioId, tipo, cantidad, origen, clave, justificacion);
-        if (repositorio.buscarPorClave(clave).isPresent()) {
-            throw new ValidacionException(Map.of("clave", MENSAJE_CLAVE_REPETIDA));
+        ReentrantLock candado = candados.computeIfAbsent(clave(usuarioId), k -> new ReentrantLock(true));
+        candado.lock(); // HU-15: una operación a la vez sobre el saldo de este usuario
+        try {
+            Optional<Movimiento> previo = repositorio.buscarPorClave(clave);
+            if (previo.isPresent()) {
+                return previo.get(); // HU-14: solicitud repetida, sin segundo movimiento
+            }
+            int saldoActual = saldoVigente(usuarioId);
+            int nuevoSaldo = saldoActual + cantidad;
+            if (nuevoSaldo < 0) {
+                throw new SaldoInsuficienteException(saldoActual, -cantidad); // HU-11: nunca saldo negativo
+            }
+            Movimiento movimiento = new Movimiento(UUID.randomUUID().toString(), usuarioId, tipo, cantidad,
+                    nuevoSaldo, origen, clave, LocalDateTime.now(reloj), justificacion);
+            repositorio.guardar(movimiento);              // si falla, no se toca el saldo
+            saldosVigentes.put(clave(usuarioId), nuevoSaldo);
+            return movimiento;
+        } finally {
+            candado.unlock();
         }
-        int saldoActual = saldoVigente(usuarioId);
-        int nuevoSaldo = saldoActual + cantidad;
-        if (nuevoSaldo < 0) {
-            throw new SaldoInsuficienteException(saldoActual, -cantidad); // HU-11: nunca saldo negativo
-        }
-        Movimiento movimiento = new Movimiento(UUID.randomUUID().toString(), usuarioId, tipo, cantidad,
-                nuevoSaldo, origen, clave, LocalDateTime.now(reloj), justificacion);
-        repositorio.guardar(movimiento);              // si falla, no se toca el saldo
-        saldosVigentes.put(clave(usuarioId), nuevoSaldo);
-        return movimiento;
+    }
+
+    /** ¿Ya se procesó una operación con esta clave? */
+    public boolean yaProcesada(String clave) {
+        return repositorio.buscarPorClave(clave).isPresent();
     }
 
     /** Saldo vigente del usuario (el que se le muestra). */

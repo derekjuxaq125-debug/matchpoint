@@ -57,14 +57,9 @@ public class CreditoServicio {
     public Movimiento asignarInicial(Usuario actor, String usuarioId, String cantidadTexto) {
         int cantidad = validar(actor, usuarioId, cantidadTexto);
         String destino = usuarios.buscarPorIdentificacion(usuarioId.trim()).orElseThrow().identificacion();
-        try {
-            return libro.registrar(destino, TipoMovimiento.ASIGNACION_INICIAL, cantidad,
-                    "ORGANIZADOR:" + actor.identificacion(), claveInicial(destino), null);
-        } catch (ValidacionException e) {
-            // Dos asignaciones simultáneas: la segunda choca con la clave única.
-            throw new ValidacionException(Map.of(CAMPO_USUARIO,
-                    "El usuario ya tiene saldo inicial asignado; no se puede asignar de nuevo y su saldo no cambia."));
-        }
+        // La clave INICIAL-<usuario> es única: dos asignaciones simultáneas producen un solo movimiento (HU-14/15).
+        return libro.registrar(destino, TipoMovimiento.ASIGNACION_INICIAL, cantidad,
+                "ORGANIZADOR:" + actor.identificacion(), claveInicial(destino), null);
     }
 
     /** Saldo inicial asignado, si ya lo tiene. */
