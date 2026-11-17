@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.matchpoint</groupId>
-    <artifactId>matchpoint-hu01-hu02-cuentas</artifactId>
-    <version>1.0</version>
+    <artifactId>matchpoint</artifactId>
+    <version>2.0</version>
     <packaging>jar</packaging>
-    <name>MatchPoint - Santiago (HU-01, HU-02, HU-04, HU-10)</name>
+    <name>MatchPoint - Equipo 1 (Nexo Digital Labs)</name>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
