@@ -10,6 +10,7 @@ import com.matchpoint.cuentas.repositorio.UsuarioRepositorio;
 import com.matchpoint.cuentas.repositorio.UsuarioRepositorioArchivo;
 import com.matchpoint.cuentas.servicio.AutenticacionServicio;
 import com.matchpoint.cuentas.servicio.CobroConCreditos;
+import com.matchpoint.cuentas.servicio.ConsultaServicio;
 import com.matchpoint.cuentas.servicio.CreditoServicio;
 import com.matchpoint.cuentas.servicio.EventoServicio;
 import com.matchpoint.cuentas.servicio.LibroMovimientos;
@@ -38,6 +39,7 @@ public final class Aplicacion {
     public final UsuarioRepositorio repositorioUsuarios;
     public final LibroMovimientos libro;
     public final CreditoServicio creditos;
+    public final ConsultaServicio consultas;
 
     private Aplicacion(Path carpeta) {
         UsuarioRepositorioArchivo repoUsuarios = new UsuarioRepositorioArchivo(carpeta.resolve("usuarios.txt"));
@@ -53,6 +55,7 @@ public final class Aplicacion {
         this.usuarios = new UsuarioServicio(repoUsuarios);
         this.autenticacion = new AutenticacionServicio(repoUsuarios);
         this.torneoServicio = new TorneoServicio(torneos);
+        this.consultas = new ConsultaServicio(torneos, repositorioEventos);
         this.eventos = new EventoServicio(repositorioEventos, torneos);
         this.pronosticos = new PronosticoServicio(repositorioEventos, repoPronosticos,
                 new CobroConCreditos(libro), Clock.systemDefaultZone()); // HU-11

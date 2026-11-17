@@ -2,6 +2,7 @@
 // roles = quién la ve en el menú (HU-02). Las que aún no existen se listan en
 // PENDIENTES y se muestran deshabilitadas, como en la versión de escritorio.
 import inicio from './inicio.js';
+import torneos from './torneos.js';
 import torneosAdmin from './torneos-organizador.js';
 import eventosAdmin from './eventos-organizador.js';
 import pronosticar from './pronosticar.js';
@@ -10,6 +11,7 @@ import creditos from './creditos.js';
 
 export const VISTAS = [
   inicio,
+  torneos,
   torneosAdmin,
   eventosAdmin,
   pronosticar,
@@ -19,7 +21,6 @@ export const VISTAS = [
 
 export const PENDIENTES = {
   PARTICIPANTE: [
-    { titulo: 'Torneos y eventos', hu: 'HU-05 / HU-06' },
     { titulo: 'Mi saldo', hu: 'HU-08' },
   ],
   ORGANIZADOR: [
