@@ -1,24 +1,24 @@
 ﻿ID,Título,Puntos,Sprint,Responsable,Depende de,Estado
-HU-01,HU-01 Registrar usuario con identificación única (5 a 15 alfanuméricos) y contraseña cifrada de mínimo 8,3,Sprint 1,Santiago,-,En revisión
-HU-03,"HU-03 Crear torneo con nombre único, deporte, fecha de inicio y fecha de fin válidas",3,Sprint 1,Johan,-,Pendiente
-HU-07,"HU-07 Asignar saldo inicial de créditos (entero mayor que cero, una sola vez por usuario)",3,Sprint 1,Julian,HU-01,Pendiente
-TT-01,"TT-01 Diseñar y crear el esquema de base de datos (usuarios, torneos, eventos, pronósticos, movimientos)",5,Sprint 1,Julian,-,Pendiente
-TT-02,TT-02 Configurar Git: una rama por funcionalidad y revisión de código entre pares,2,Sprint 1,Santiago,-,En revisión
-TT-03,TT-03 Configurar el tablero Kanban (GitHub Projects o Trello) y pegar el enlace en la wiki,1,Sprint 1,Santiago,-,Pendiente (falta crear el tablero)
-HU-02,"HU-02 Iniciar sesión y reconocer el rol del usuario (participante, organizador, auditor)",5,Sprint 2,Santiago,HU-01,En revisión
-HU-04,"HU-04 Registrar evento con fecha, modalidad de pronóstico, opciones válidas y hora de cierre",5,Sprint 2,Santiago,HU-03,En revisión
-HU-05,HU-05 Listar torneos y sus eventos con el estado de cada uno (abierto o cerrado),3,Sprint 2,Johan,"HU-03, HU-04",Pendiente
-HU-06,HU-06 Ver las opciones de pronóstico y la fecha y hora de cierre de cada evento,2,Sprint 2,Johan,HU-04,Pendiente
-HU-08,HU-08 Consultar saldo; debe coincidir con la suma de los movimientos,2,Sprint 2,Johan,"HU-07, HU-09",Pendiente
-HU-09,"HU-09 Registrar cada movimiento confirmado (operación, usuario, tipo, cantidad, fecha, origen); no se elimina",5,Sprint 2,Julian,TT-01,Pendiente
-HU-10,HU-10 Registrar pronóstico solo en un evento habilitado y con una opción válida,5,Sprint 2,Santiago,"HU-04, HU-02",En revisión
-HU-11,HU-11 Verificar saldo y descontar créditos al confirmar un pronóstico; el saldo nunca queda negativo,5,Sprint 2,Julian,"HU-10, HU-09",Pendiente
-HU-12,HU-12 Rechazar pronósticos y cambios cuando el evento ya está cerrado,3,Sprint 2,Santiago,HU-10,Pendiente (rechazo de nuevos pronósticos ya cubierto en HU-10; faltan los cambios)
-HU-14,HU-14 Detectar solicitudes repetidas para no generar descuentos duplicados,5,Sprint 2,Julian,"HU-10, HU-11",Pendiente
-HU-15,HU-15 Procesar de forma segura operaciones simultáneas sobre el mismo saldo,8,Sprint 2,Julian,HU-11,Pendiente
-HU-26,HU-26 Cada participante ve y gestiona solo sus propias participaciones y movimientos,3,Sprint 2,Santiago,HU-02,Pendiente
-TT-04,TT-04 Aplicar y justificar 3 o más patrones de diseño (con apoyo de Julian),5,Sprint 2,Santiago,"HU-09, HU-11",Pendiente
-TT-05,"TT-05 Pruebas de saldo, idempotencia y concurrencia (cero descuentos duplicados y saldos negativos)",8,Sprint 2,Johan,"HU-11, HU-14, HU-15",Pendiente
+HU-01,HU-01 Registrar usuario con identificación única (5 a 15 alfanuméricos) y contraseña cifrada de mínimo 8,3,Sprint 1,Santiago,-,Terminada
+HU-03,"HU-03 Crear torneo con nombre único, deporte, fecha de inicio y fecha de fin válidas",3,Sprint 1,Johan,-,Terminada
+HU-07,"HU-07 Asignar saldo inicial de créditos (entero mayor que cero, una sola vez por usuario)",3,Sprint 1,Julian,HU-01,Terminada
+TT-01,"TT-01 Diseñar y crear el esquema de base de datos (usuarios, torneos, eventos, pronósticos, movimientos)",5,Sprint 1,Julian,-,Terminada
+TT-02,TT-02 Configurar Git: una rama por funcionalidad y revisión de código entre pares,2,Sprint 1,Santiago,-,Terminada
+TT-03,TT-03 Configurar el tablero Kanban (GitHub Projects o Trello) y pegar el enlace en la wiki,1,Sprint 1,Santiago,-,Terminada
+HU-02,"HU-02 Iniciar sesión y reconocer el rol del usuario (participante, organizador, auditor)",5,Sprint 2,Santiago,HU-01,Terminada
+HU-04,"HU-04 Registrar evento con fecha, modalidad de pronóstico, opciones válidas y hora de cierre",5,Sprint 2,Santiago,HU-03,Terminada
+HU-05,HU-05 Listar torneos y sus eventos con el estado de cada uno (abierto o cerrado),3,Sprint 2,Johan,"HU-03, HU-04",Terminada
+HU-06,HU-06 Ver las opciones de pronóstico y la fecha y hora de cierre de cada evento,2,Sprint 2,Johan,HU-04,Terminada
+HU-08,HU-08 Consultar saldo; debe coincidir con la suma de los movimientos,2,Sprint 2,Johan,"HU-07, HU-09",Terminada
+HU-09,"HU-09 Registrar cada movimiento confirmado (operación, usuario, tipo, cantidad, fecha, origen); no se elimina",5,Sprint 2,Julian,TT-01,Terminada
+HU-10,HU-10 Registrar pronóstico solo en un evento habilitado y con una opción válida,5,Sprint 2,Santiago,"HU-04, HU-02",Terminada
+HU-11,HU-11 Verificar saldo y descontar créditos al confirmar un pronóstico; el saldo nunca queda negativo,5,Sprint 2,Julian,"HU-10, HU-09",Terminada
+HU-12,HU-12 Rechazar pronósticos y cambios cuando el evento ya está cerrado,3,Sprint 2,Santiago,HU-10,Terminada
+HU-14,HU-14 Detectar solicitudes repetidas para no generar descuentos duplicados,5,Sprint 2,Julian,"HU-10, HU-11",Terminada
+HU-15,HU-15 Procesar de forma segura operaciones simultáneas sobre el mismo saldo,8,Sprint 2,Julian,HU-11,Terminada
+HU-26,HU-26 Cada participante ve y gestiona solo sus propias participaciones y movimientos,3,Sprint 2,Santiago,HU-02,Terminada
+TT-04,TT-04 Aplicar y justificar 3 o más patrones de diseño (con apoyo de Julian),5,Sprint 2,Santiago,"HU-09, HU-11",Terminada
+TT-05,"TT-05 Pruebas de saldo, idempotencia y concurrencia (cero descuentos duplicados y saldos negativos)",8,Sprint 2,Johan,"HU-11, HU-14, HU-15",Terminada
 HU-13,HU-13 Ver mis pronósticos con su estado y el resultado asociado,3,Sprint 3,Johan,HU-10,Pendiente
 HU-16,HU-16 Ver el historial de mis movimientos en orden cronológico,3,Sprint 3,Johan,HU-09,Pendiente
 HU-17,"HU-17 Inscribir, consultar y retirar participantes de un torneo",5,Sprint 3,Johan,"HU-03, HU-01",Pendiente

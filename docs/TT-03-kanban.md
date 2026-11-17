@@ -31,7 +31,7 @@ El archivo `backlog-matchpoint.csv` trae los 32 ítems con ID, título, puntos, 
 ## 4. Cierre de la tarea
 1. Crear el tablero y dar acceso a Julian y Johan.
 2. Pegar el enlace del tablero en la wiki del Sprint 1 (sección de herramientas).
-3. Mover cada tarjeta según su estado real; HU-01, HU-02, HU-04, HU-10 y TT-02 están "En revisión" en el CSV.
+3. Tablero creado en Trello: **MatchPoint · Equipo 1** (enlace en la wiki, página Sprint 2 Backlog). Cada tarjeta lleva criterios de aceptación, checklist de definición de terminado y la revisión entre pares.
 
 ## 5. Rutina semanal
 - En la reunión semanal: revisar columna "En revisión" primero (desbloquea a los demás), luego "En progreso".
