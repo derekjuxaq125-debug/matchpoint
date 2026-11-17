@@ -56,6 +56,7 @@ public class VentanaPrincipal extends JFrame {
         switch (opcion) {
             case REGISTRAR_EVENTO -> new DialogoEvento(this, app, usuario).setVisible(true);
             case REGISTRAR_PRONOSTICO -> new DialogoPronostico(this, app, usuario).setVisible(true);
+            case CREAR_TORNEO -> new DialogoTorneo(this, app, usuario).setVisible(true);
             case ASIGNAR_CREDITOS -> new DialogoAsignarCreditos(this, app, usuario).setVisible(true);
             case CAMBIAR_PRONOSTICO -> new DialogoMisPronosticos(this, app, usuario).setVisible(true);
             default -> JOptionPane.showMessageDialog(this,
