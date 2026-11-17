@@ -15,7 +15,7 @@ Comprobación: pegar `supabase/tests/tt05_pruebas.sql` en el *SQL Editor* → to
 
 1. Entrar a https://vercel.com con la cuenta de GitHub → **Add New… → Project**.
 2. Importar el repositorio `derekjuxaq125-debug/matchpoint`.
-3. No cambiar nada: `vercel.json` (raíz) ya indica cómo construir (`web/`) y qué publicar (`web/dist`).
+3. Elegir `web` como *Root Directory*. El archivo `web/vercel.json` indica el preset Vite, los comandos de instalación y compilación, y la carpeta que se publica (`dist`).
 4. **Deploy**. Cada push a `main` vuelve a publicar.
 
 La URL y la llave pública de Supabase van en `web/.env.production`. Si prefieren no tenerlas en el repo, bórrenlas de ahí y créelas en Vercel → *Settings → Environment Variables*: `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`.
