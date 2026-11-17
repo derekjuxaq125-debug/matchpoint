@@ -15,11 +15,10 @@ import com.matchpoint.cuentas.servicio.CreditoServicio;
 import com.matchpoint.cuentas.servicio.EventoServicio;
 import com.matchpoint.cuentas.servicio.LibroMovimientos;
 import com.matchpoint.cuentas.servicio.PronosticoServicio;
+import com.matchpoint.cuentas.servicio.SaldoServicio;
 import com.matchpoint.cuentas.servicio.TorneoServicio;
 import com.matchpoint.cuentas.servicio.UsuarioServicio;
 import java.nio.file.Path;
-import java.time.LocalDate;
-import java.util.UUID;
 import java.time.Clock;
 
 /**
@@ -40,6 +39,7 @@ public final class Aplicacion {
     public final LibroMovimientos libro;
     public final CreditoServicio creditos;
     public final ConsultaServicio consultas;
+    public final SaldoServicio saldos;
 
     private Aplicacion(Path carpeta) {
         UsuarioRepositorioArchivo repoUsuarios = new UsuarioRepositorioArchivo(carpeta.resolve("usuarios.txt"));
@@ -51,6 +51,7 @@ public final class Aplicacion {
         this.repositorioUsuarios = repoUsuarios;
         this.libro = new LibroMovimientos(new MovimientoRepositorioArchivo(carpeta.resolve("movimientos.txt")));
         this.creditos = new CreditoServicio(repoUsuarios, libro);
+        this.saldos = new SaldoServicio(libro);
 
         this.usuarios = new UsuarioServicio(repoUsuarios);
         this.autenticacion = new AutenticacionServicio(repoUsuarios);
