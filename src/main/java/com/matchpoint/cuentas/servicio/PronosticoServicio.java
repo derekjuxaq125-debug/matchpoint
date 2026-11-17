@@ -2,6 +2,7 @@ package com.matchpoint.cuentas.servicio;
 
 import com.matchpoint.cuentas.modelo.Evento;
 import com.matchpoint.cuentas.modelo.Pronostico;
+import com.matchpoint.cuentas.modelo.ResultadoPronostico;
 import com.matchpoint.cuentas.modelo.Rol;
 import com.matchpoint.cuentas.modelo.Usuario;
 import com.matchpoint.cuentas.repositorio.EventoRepositorio;
@@ -12,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Lógica de HU-10: registrar un pronóstico solo en un evento habilitado y con
@@ -28,6 +30,8 @@ public class PronosticoServicio {
     private final PronosticoRepositorio pronosticos;
     private final CobroPronostico cobro;
     private final Clock reloj;
+    /** HU-14: clave de solicitud → id del pronóstico que generó. */
+    private final Map<String, String> solicitudesProcesadas = new ConcurrentHashMap<>();
 
     public PronosticoServicio(EventoRepositorio eventos, PronosticoRepositorio pronosticos) {
         this(eventos, pronosticos, CobroPronostico.NINGUNO, Clock.systemDefaultZone());
@@ -50,6 +54,34 @@ public class PronosticoServicio {
      * @throws com.matchpoint.cuentas.repositorio.RepositorioException si falla el guardado
      */
     public synchronized Pronostico registrar(Usuario actor, String eventoId, String opcion) {
+        return registrar(actor, eventoId, opcion, null).pronostico();
+    }
+
+    /**
+     * HU-14: igual que {@link #registrar(Usuario, String, String)}, pero con una
+     * clave de solicitud que el cliente genera una vez y reutiliza en los
+     * reintentos. Si la clave ya se procesó, devuelve el pronóstico original sin
+     * volver a cobrar.
+     */
+    public synchronized ResultadoPronostico registrar(Usuario actor, String eventoId, String opcion,
+                                                      String claveSolicitud) {
+        String clave = claveSolicitud == null || claveSolicitud.isBlank() ? null : claveSolicitud.trim();
+        if (clave != null && solicitudesProcesadas.containsKey(clave)) {
+            String id = solicitudesProcesadas.get(clave);
+            Optional<Pronostico> original = pronosticos.listar().stream().filter(p -> p.id().equals(id)).findFirst();
+            if (original.isPresent() && actor != null
+                    && original.get().usuarioId().equalsIgnoreCase(actor.identificacion())) {
+                return new ResultadoPronostico(original.get(), true);
+            }
+        }
+        Pronostico nuevo = registrarNuevo(actor, eventoId, opcion);
+        if (clave != null) {
+            solicitudesProcesadas.put(clave, nuevo.id());
+        }
+        return new ResultadoPronostico(nuevo, false);
+    }
+
+    private Pronostico registrarNuevo(Usuario actor, String eventoId, String opcion) {
         if (actor == null || actor.rol() != Rol.PARTICIPANTE) {
             throw new AccesoDenegadoException("Solo un participante puede registrar pronósticos.");
         }
